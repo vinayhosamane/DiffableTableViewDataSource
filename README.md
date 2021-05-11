@@ -6,12 +6,17 @@ iOS 13 and later
 
 ## History
 If you worked on tableview, then you must have come across this famous error on your console.
+
 'NSInternalInconsistencyException', reason: 'Invalid update: invalid number of rows in section 0. The number of rows contained in an existing section after the update (2) must be equal to the number of rows contained in that section before the update (2), plus or minus the number of rows inserted or deleted from that section (0 inserted, 1 deleted) and plus or minus the number of rows moved into or out of that section (0 moved in, 0 moved out).'
+
 When this error appears on your console, you would have even searched this error in your browser !!
+
 Well this is due to inconsistency with your datasource.
 Solution is to first update  your datasource model, then apply insert or delete operations on the cached tableview datasource with respect to updates indexes.
 Even though you know the solution, this scenario will happen un-knowingly and error prone, since you have to know when to update or invalidate the datasource.
-May of us would have taken the easy solution, 'tableview reloadData' when you found the complexity in just reloading specific row or section, inserting new rows to the section, or deleting complete section from the tableview. Yup! You guessed it right. We have this sweet solution in our app.
+May of us would have taken the easy solution, 'tableview reloadData' when you found the complexity in just reloading specific row or section, inserting new rows to the section, or deleting complete section from the tableview.
+
+Yup! You guessed it right. We have this sweet solution in our app.
 
 ## Future
 Now to solve the above issue, apple has introduced a new datasource api in iOS13, which can be used with either tableview or collectionView. And this api is smart enough to identify the differences between your old and new datasources into the tableview.
