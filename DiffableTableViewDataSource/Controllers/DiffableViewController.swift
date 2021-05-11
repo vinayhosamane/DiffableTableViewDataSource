@@ -39,6 +39,8 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
         
         tableView.rowHeight = 50.0
         tableView.estimatedRowHeight = UITableView.automaticDimension
+        
+        tableView.contentInset = UIEdgeInsets(top: 20.0, left: 0.0, bottom: 0.0, right: 0.0)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
