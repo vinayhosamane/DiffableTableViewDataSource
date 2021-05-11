@@ -7,7 +7,9 @@ iOS 13 and later
 ## History
 If you worked on tableview, then you must have come across this famous error on your console.
 
+**
 'NSInternalInconsistencyException', reason: 'Invalid update: invalid number of rows in section 0. The number of rows contained in an existing section after the update (2) must be equal to the number of rows contained in that section before the update (2), plus or minus the number of rows inserted or deleted from that section (0 inserted, 1 deleted) and plus or minus the number of rows moved into or out of that section (0 moved in, 0 moved out).'
+**
 
 When this error appears on your console, you would have even searched this error in your browser !!
 
@@ -41,6 +43,8 @@ with the introduction of new diffable datasource UITableViewDiffableDataSource, 
 etc, please check apple documentation.
 
 ## Diffable Datasource API
+
+```
     // create diffable tableview datasource
     private func makeDatasource() -> UITableViewDiffableDataSource<SectionModel, RowModel> {
         let reuseIdentifier = rowIdentifier
@@ -52,6 +56,7 @@ etc, please check apple documentation.
             return cell
         }
     }
+```
   
 In old tableview, you would have set the datasource to self. So that the view controller has to implement those datasource api's.
 
@@ -70,6 +75,7 @@ Cell Provider where UITableViewCell, as opposed to old approach, where we used c
 
 To update the datasource with new data or model,
 
+```
 // update  datasource with new items
  func update(with cardsViewModel: CatalogCardsViewModel, animate: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionModel, RowModel>()
@@ -80,12 +86,16 @@ To update the datasource with new data or model,
         datasource.apply(snapshot, animatingDifferences: animate, completion: nil)
     }
 
+```
+
+```
 // delete items from datasource
     func remove(_ card: RowModel, animate: Bool = true) {
         var snapshot = datasource.snapshot()
         snapshot.deleteItems([card])
         datasource.apply(snapshot, animatingDifferences: animate, completion: nil)
     }
+```
  
 We can use snapshot to update datasource, if it is for the first time, then create a snapshot and apply it to tableview datasource.
 If the snapshot is already there, then get the snapshot from the datasource and update it by either adding removing section/row items.
