@@ -5,6 +5,7 @@
 //  Created by Hosamane, Vinay K N on 11/05/21.
 //
 import UIKit
+import Combine
 
 class DiffableViewController: UIViewController, UITableViewDelegate {
 
@@ -16,20 +17,37 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
     
     private lazy var viewModel = DiffableTableViewModel()
     
+    var cancellables = [AnyCancellable]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTableviewCells()
+        
+        setupBindings()
     
         // delay and update tableview
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [unowned self] in
-            self.update(with: self.viewModel)
+        self.update(with: self.viewModel.cards)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        //destory all subscriptions
+        cancellables.forEach { (subscriber) in
+            subscriber.cancel()
         }
-        
-        // delay and update tableview
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) { [unowned self] in
-            self.remove(RowModel(name: "Nitin", detail: "xxx@gmail.com", type: .A))
-        }
+    }
+    
+    private func setupBindings() {
+        let publisher = viewModel.fetchCatalogCards()
+        publisher
+            .receive(on: DispatchQueue.main)
+            .sink { (completion) in
+            if case .failure(_) = completion {
+                print("fetch error")
+            }
+        } receiveValue: { (cards) in
+            self.update(with: cards)
+        }.store(in: &cancellables)
     }
     
     private func setupTableviewCells() {
@@ -76,10 +94,10 @@ extension DiffableViewController {
         }
     }
     
-    func update(with cardsViewModel: DiffableTableViewModel, animate: Bool = true) {
+    func update(with cards: [SectionModel], animate: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionModel, RowModel>()
         
-        cardsViewModel.cards.forEach { (section) in
+        cards.forEach { (section) in
             snapshot.appendSections([section])
             snapshot.appendItems(section.rows, toSection: section)
         }

@@ -5,6 +5,13 @@
 //  Created by Hosamane, Vinay K N on 11/05/21.
 //
 import Foundation
+import Combine
+
+enum CatalogError: Error {
+    case ServerError
+    case NetworkError
+    case Unknown
+}
 
 class DiffableTableViewModel {
 
@@ -30,15 +37,30 @@ class DiffableTableViewModel {
             RowModel(name: "Keerthana Basavaraj", detail: "xxx@gmail.com", type: .B)
         ])
         
-        let colleagueSectionModel = SectionModel(title: "Co-Worker", rows:
-                                                    [RowModel(name: "Nitin", detail: "xxx@gmail.com", type: .A),
-                                                     RowModel(name: "Prashanth", detail: "xxx@gmail.com", type: .A),
-                                                     RowModel(name: "Ramya B U", detail: "xxx@gmail.com", type: .A),
-                                                     RowModel(name: "Sindhuja", detail: "xxx@gmail.com", type: .A),
-                                                     RowModel(name: "Reshma", detail: "xxx@gmail.com", type: .A),
-                                                     RowModel(name: "Apoorv", detail: "xxx@gmail.com", type: .A)])
-        
-        cards = [friendsSectionModel, familySectionModel, colleagueSectionModel]
+        cards = [friendsSectionModel, familySectionModel]
+    }
+
+    func fetchCatalogCards() -> AnyPublisher<[SectionModel], CatalogError> {
+        return Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 10) { [weak self] in
+                guard var updatedCards = self?.cards else {
+                    promise(.failure(.Unknown))
+                    return
+                }
+                let colleagueSectionModel = SectionModel(title: "Co-Worker", rows:
+                                                            [RowModel(name: "Nitin", detail: "xxx@gmail.com", type: .A),
+                                                             RowModel(name: "Prashanth", detail: "xxx@gmail.com", type: .A),
+                                                             RowModel(name: "Ramya B U", detail: "xxx@gmail.com", type: .A),
+                                                             RowModel(name: "Sindhuja", detail: "xxx@gmail.com", type: .A),
+                                                             RowModel(name: "Reshma", detail: "xxx@gmail.com", type: .A),
+                                                             RowModel(name: "Apoorv", detail: "xxx@gmail.com", type: .A)])
+                updatedCards.append(colleagueSectionModel)
+                
+                //also update state of view model cards
+                self?.cards.append(colleagueSectionModel)
+                promise(.success(updatedCards))
+            }
+        }.eraseToAnyPublisher()
     }
 
 }
