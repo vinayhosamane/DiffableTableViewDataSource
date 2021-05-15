@@ -1,6 +1,8 @@
 # DiffableTableViewDataSource
 This project is created to evaluate new tableview diffable dataosurce API, UITableViewDiffableDataSource. Available only in iOS13 +
 
+![DiffableDoatasource Demo-high](https://user-images.githubusercontent.com/12964593/118347868-e434fe00-b563-11eb-9092-e3c74920ca0c.gif)
+
 ## Availability
 iOS 13 and later
 
