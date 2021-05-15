@@ -1,6 +1,8 @@
 # DiffableTableViewDataSource
 This project is created to evaluate new tableview diffable dataosurce API, UITableViewDiffableDataSource. Available only in iOS13 +
 
+![DiffableDoatasource Demo-high](https://user-images.githubusercontent.com/12964593/118347868-e434fe00-b563-11eb-9092-e3c74920ca0c.gif)
+
 ## Availability
 iOS 13 and later
 
@@ -99,6 +101,3 @@ To update the datasource with new data or model,
  
 We can use snapshot to update datasource, if it is for the first time, then create a snapshot and apply it to tableview datasource.
 If the snapshot is already there, then get the snapshot from the datasource and update it by either adding removing section/row items.
-
-![DiffableDoatasource Demo-high](https://user-images.githubusercontent.com/12964593/118347868-e434fe00-b563-11eb-9092-e3c74920ca0c.gif)
-
