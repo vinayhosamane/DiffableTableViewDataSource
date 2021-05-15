@@ -28,6 +28,14 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
     
         // delay and update tableview
         self.update(with: self.viewModel.cards)
+        
+        // simulate remove from dataosurce
+        let pickedSectionIndexIndex = Int.random(in: 0..<viewModel.cards.count)
+        let pickedRowIndex = Int.random(in: 0..<viewModel.cards[pickedSectionIndexIndex].rows.count)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [unowned self] in
+            self.remove(viewModel.cards[pickedSectionIndexIndex].rows[pickedRowIndex])
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -42,11 +50,11 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
         publisher
             .receive(on: DispatchQueue.main)
             .sink { (completion) in
-            if case .failure(_) = completion {
-                print("fetch error")
+            if case .failure(let error) = completion {
+                print("fetch error -- \(error)")
             }
-        } receiveValue: { (cards) in
-            self.update(with: cards)
+        } receiveValue: { [weak self] cards in
+            self?.update(with: cards)
         }.store(in: &cancellables)
     }
     
