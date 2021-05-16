@@ -74,7 +74,7 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionModel = viewModel.cards[section]
+        let sectionModel = datasource.snapshot().sectionIdentifiers[section]
         
         let label = UILabel()
         label.text = sectionModel.title
@@ -83,6 +83,8 @@ class DiffableViewController: UIViewController, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // on row selection
+        let rowModel = datasource.snapshot().sectionIdentifiers[indexPath.section].rows[indexPath.row]
+        print(rowModel)
     }
 
 }
